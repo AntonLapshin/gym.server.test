@@ -1,0 +1,1 @@
+var instances=require("./gymdb/instances"),port=Number(process.env.PORT||8081);require("./server").start(port,instances.GYMTESTVK).then(function(){console.log("Listening port "+port)},function(e){throw e});
