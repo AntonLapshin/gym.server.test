@@ -25,8 +25,8 @@ module.exports = {
   find: function(id, shown) {
     var defer = $.Deferred();
     Db.getColl('players').find({
-      _id: id
-    }, shown)
+        _id: id
+      }, shown)
       .toArray(function(err, data) {
         $.handle(err, data[0], defer);
       });
@@ -40,19 +40,17 @@ module.exports = {
     var catData = Rank.getCatData(cat);
     return $.Deferred(function(defer) {
       Db.getColl('players').find({
-        $query: {
           "public.mass": {
             "$gte": catData.min,
             "$lt": catData.max
           }
-        },
-        $orderby: {
+        }, {
+          _id: 1,
+          public: 1
+        })
+        .sort({
           'public.sum': -1
-        }
-      }, {
-        _id: 1,
-        public: 1
-      })
+        })
         .limit(LIMIT_TOP_PLAYERS)
         .toArray(function(err, data) {
           $.handle(err, data, defer);
@@ -61,15 +59,12 @@ module.exports = {
   },
   top: function() {
     return $.Deferred(function(defer) {
-      Db.getColl('players').find({
-        $query: {},
-        $orderby: {
+      Db.getColl('players').find({}, {
+          _id: 1,
+          public: 1
+        }).sort({
           'public.sum': -1
-        }
-      }, {
-        _id: 1,
-        public: 1
-      })
+        })
         .limit(LIMIT_TOP_PLAYERS)
         .toArray(function(err, data) {
           $.handle(err, data, defer);
@@ -79,13 +74,13 @@ module.exports = {
   getPlayers: function(ids) {
     return $.Deferred(function(defer) {
       Db.getColl('players').find({
-        _id: {
-          $in: ids
-        }
-      }, {
-        _id: 1,
-        public: 1
-      })
+          _id: {
+            $in: ids
+          }
+        }, {
+          _id: 1,
+          public: 1
+        })
         .limit(LIMIT_TOP_PLAYERS)
         .toArray(function(err, data) {
           $.handle(err, data, defer);
